@@ -1,0 +1,89 @@
+.app-sider {
+  text-align: center;
+  line-height: 90px;
+  color: #fff;
+  background-image:url('https://i.4pcdn.org/x/1710062883749287.jpg');
+}
+
+.nav-link-sider {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container-link {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.container-link a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-size: cover; /* Изменено на cover */
+  background-position: center; /* Центрируем фон */
+  background-repeat: no-repeat;
+  padding-left: 50px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Затемнение фона для лучшей читаемости текста */
+.container-link a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+  z-index: 1;
+}
+
+.container-link a span {
+  position: relative;
+  z-index: 2;
+}
+
+.link-home {
+  background-image: url('https://wallpapers.com/images/hd/green-forest-1920-x-1080-wallpaper-3sqdpemmgcqvdcj3.jpg');
+}
+
+.link-diary {
+  background-image: url('https://say-hi.me/wp-content/uploads/2015/08/Research1.jpg');
+}
+
+.link-strategies {
+  background-image: url('https://avatars.mds.yandex.net/i?id=1c4d1bb611150995c4d368abb452dd63_l-4628413-images-thumbs&n=13');
+}
+
+.link-rules {
+  background-image: url('https://cdn.culture.ru/images/32f9d065-e7ab-510e-974d-84515a092ecf');
+}
+
+.link-statistics {
+  background-image: url('https://i.pinimg.com/originals/8e/42/a4/8e42a4cc851bcb80c1536d150ab6dc7d.jpg');
+}
+
+.link-history {
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cole_Thomas_The_Consummation_The_Course_of_the_Empire_1836.jpg/960px-Cole_Thomas_The_Consummation_The_Course_of_the_Empire_1836.jpg');
+}
+
+.container-link a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.container-link a:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
