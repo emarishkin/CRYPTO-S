@@ -1,22 +1,23 @@
 import { useState, type ChangeEvent, type FC, type FormEvent } from "react";
+import type { IDeal } from "../types";
 
-interface Deal {
-    date: string;
-    instrument: string;
-    openPrice: number | '';
-    closePrice: number | '';
-    commission: number | '';
-    stopLoss:number | ''
-}
 
 export const Diary: FC = () => {
-    const [addDeal, setAddDeal] = useState<Deal>({
+    
+    const [mockDeals,setMockDeals] = useState<IDeal[]>([])
+    const [addDeal, setAddDeal] = useState<Partial<IDeal>>({
         date: new Date().toISOString().split('T')[0],
         instrument: '',
         openPrice: '',
         closePrice: '',
         commission: '',
-        stopLoss: ''
+        stopLoss: '',
+        takeProfit:'',
+        reason:'',
+        targetPrice:'',
+        emotions:'',
+        closeType:'none',
+        images:[]
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -27,10 +28,34 @@ export const Diary: FC = () => {
         }));
     };
 
+    const handleSubmit = (e:FormEvent) => {
+        e.preventDefault()
+
+        const newDeal:IDeal = {
+            id:Date.now(),
+            date:addDeal.date as string,
+            instrument:addDeal.instrument as string,
+            openPrice:addDeal.openPrice as 0,
+            closePrice:addDeal.closePrice  as 0,
+            commission:addDeal.commission  as 0,
+            stopLoss:addDeal.stopLoss  as 0,
+            takeProfit:addDeal.takeProfit  as 0,
+            reason:addDeal.reason as string,
+            targetPrice:addDeal.targetPrice as 0,
+            emotions:addDeal.emotions as string,
+            closeType:addDeal.closeType as 'none' | 'profit' | 'loss' | 'zero' | 'manually',
+            images:addDeal.images || []
+
+        }
+       
+        setMockDeals([...mockDeals,newDeal])
+
+    }
+
     return (
         <section className="diary-form"> 
             <h2>Форма добавления сделки</h2>
-            <form >
+            <form onSubmit={handleSubmit} >
                 <label>
                     Дата:
                     <input 
@@ -107,17 +132,64 @@ export const Diary: FC = () => {
                 </label>
 
                 <label>
-                    Стоп-лосс:
+                    Тейк-профит:
                     <input 
                         type="number"
-                        name="stopLoss"
-                        value={addDeal.stopLoss}
+                        name="takeProfit"
+                        value={addDeal.takeProfit}
                         onChange={handleChange}
-                        placeholder="stopLoss"
+                        placeholder="takeProfit"
                         step="0.01"
                         required
                     />
                 </label>
+
+                <label>
+                    Причина:
+                    <input 
+                        type="string"
+                        name="reason"
+                        value={addDeal.reason}
+                        onChange={handleChange}
+                        placeholder="Причина"
+                        required
+                    />
+                </label>
+
+                 <label>
+                    Цена входа:
+                    <input 
+                        type="number"
+                        name="targetPrice"
+                        value={addDeal.targetPrice}
+                        onChange={handleChange}
+                        placeholder="targetPrice"
+                        step="0.01"
+                        required
+                    />
+                </label>
+
+                <select name="closeType" value={addDeal.closeType || 'none'} onChange={handleChange}>
+                    <option value="none">Не выбрано</option>
+                    <option value="profit">Закрылась по Тейк-профиту</option>
+                    <option value="loss">Закрылась по Стоп-Лоссу</option>
+                    <option value="zero">Безубыток</option>
+                    <option value="manually">Вручную</option>
+                </select>
+
+                <label>
+                    Эмоции:
+                    <input 
+                        type="text"
+                        name="emotions"
+                        value={addDeal.emotions}
+                        onChange={handleChange}
+                        placeholder="Эмоции"
+                        required
+                    />
+                </label>
+                
+
 
                 <button type="submit">Добавить сделку</button>
             </form>
