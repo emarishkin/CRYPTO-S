@@ -11,7 +11,6 @@ export const mockDeals: IDeal[] = [
         stopLoss: 1.0800,
         takeProfit: 1.0950,
         reason: "Пробой уровня сопротивления",
-        targetPrice: 1.0930,
         emotions: "Уверенность",
         closeType: "profit",
         images: [

@@ -1,11 +1,13 @@
 import { useState, type ChangeEvent, type FC, type FormEvent } from "react";
-import type { IDeal } from "../types";
+import { useDiary } from "../Context/DiaryContext";
+import type { CloseType } from "../types";
 
 
 export const Diary: FC = () => {
-    
-    const [mockDeals,setMockDeals] = useState<IDeal[]>([])
-    const [addDeal, setAddDeal] = useState<Partial<IDeal>>({
+
+    const { addDeal } = useDiary()
+
+    const [newDeal, setNewDeal] = useState({
         date: new Date().toISOString().split('T')[0],
         instrument: '',
         openPrice: '',
@@ -14,15 +16,14 @@ export const Diary: FC = () => {
         stopLoss: '',
         takeProfit:'',
         reason:'',
-        targetPrice:'',
         emotions:'',
-        closeType:'none',
+        closeType:'none' as CloseType,
         images:[]
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setAddDeal(prev => ({
+        setNewDeal(prev => ({
             ...prev,
             [name]: value
         }));
@@ -31,26 +32,36 @@ export const Diary: FC = () => {
     const handleSubmit = (e:FormEvent) => {
         e.preventDefault()
 
-        const newDeal:IDeal = {
-            id:Date.now(),
-            date:addDeal.date as string,
-            instrument:addDeal.instrument as string,
-            openPrice:addDeal.openPrice as 0,
-            closePrice:addDeal.closePrice  as 0,
-            commission:addDeal.commission  as 0,
-            stopLoss:addDeal.stopLoss  as 0,
-            takeProfit:addDeal.takeProfit  as 0,
-            reason:addDeal.reason as string,
-            targetPrice:addDeal.targetPrice as 0,
-            emotions:addDeal.emotions as string,
-            closeType:addDeal.closeType as 'none' | 'profit' | 'loss' | 'zero' | 'manually',
-            images:addDeal.images || []
-
-        }
+        addDeal({
+            date: newDeal.date,
+            instrument: newDeal.instrument,
+            openPrice: Number(newDeal.openPrice) || 0,
+            closePrice: Number(newDeal.closePrice) || 0,
+            commission: Number(newDeal.commission) || 0,
+            stopLoss: Number(newDeal.stopLoss) || 0,
+            takeProfit: Number(newDeal.takeProfit) || 0,
+            reason: newDeal.reason,
+            emotions: newDeal.emotions,
+            closeType: newDeal.closeType,
+            images: newDeal.images
+        })
        
-        setMockDeals([...mockDeals,newDeal])
+        setNewDeal({
+          date: new Date().toISOString().split('T')[0],
+          instrument: '',
+          openPrice: '',
+          closePrice: '',
+          commission: '',
+          stopLoss: '',
+          takeProfit: '',
+          reason: '',
+          emotions: '',
+          closeType: 'none',
+          images: []
+        });
+  };
 
-    }
+
 
     return (
         <section className="diary-form"> 
@@ -61,7 +72,7 @@ export const Diary: FC = () => {
                     <input 
                         type="date"
                         name="date"
-                        value={addDeal.date}
+                        value={newDeal.date}
                         onChange={handleChange}
                         required
                     />
@@ -72,7 +83,7 @@ export const Diary: FC = () => {
                     <input 
                         type="text"
                         name="instrument"
-                        value={addDeal.instrument}
+                        value={newDeal.instrument}
                         onChange={handleChange}
                         placeholder="Инструмент"
                         required
@@ -84,7 +95,7 @@ export const Diary: FC = () => {
                     <input 
                         type="number"
                         name="openPrice"
-                        value={addDeal.openPrice}
+                        value={newDeal.openPrice}
                         onChange={handleChange}
                         placeholder="Цена открытия"
                         step="0.01"
@@ -97,7 +108,7 @@ export const Diary: FC = () => {
                     <input 
                         type="number"
                         name="closePrice"
-                        value={addDeal.closePrice}
+                        value={newDeal.closePrice}
                         onChange={handleChange}
                         placeholder="Цена закрытия"
                         step="0.01"
@@ -110,7 +121,7 @@ export const Diary: FC = () => {
                     <input 
                         type="number"
                         name="commission"
-                        value={addDeal.commission}
+                        value={newDeal.commission}
                         onChange={handleChange}
                         placeholder="Комиссия"
                         step="0.01"
@@ -123,7 +134,7 @@ export const Diary: FC = () => {
                     <input 
                         type="number"
                         name="stopLoss"
-                        value={addDeal.stopLoss}
+                        value={newDeal.stopLoss}
                         onChange={handleChange}
                         placeholder="stopLoss"
                         step="0.01"
@@ -136,7 +147,7 @@ export const Diary: FC = () => {
                     <input 
                         type="number"
                         name="takeProfit"
-                        value={addDeal.takeProfit}
+                        value={newDeal.takeProfit}
                         onChange={handleChange}
                         placeholder="takeProfit"
                         step="0.01"
@@ -149,27 +160,14 @@ export const Diary: FC = () => {
                     <input 
                         type="string"
                         name="reason"
-                        value={addDeal.reason}
+                        value={newDeal.reason}
                         onChange={handleChange}
                         placeholder="Причина"
                         required
                     />
                 </label>
 
-                 <label>
-                    Цена входа:
-                    <input 
-                        type="number"
-                        name="targetPrice"
-                        value={addDeal.targetPrice}
-                        onChange={handleChange}
-                        placeholder="targetPrice"
-                        step="0.01"
-                        required
-                    />
-                </label>
-
-                <select name="closeType" value={addDeal.closeType || 'none'} onChange={handleChange}>
+                <select name="closeType" value={newDeal.closeType || 'none'} onChange={handleChange}>
                     <option value="none">Не выбрано</option>
                     <option value="profit">Закрылась по Тейк-профиту</option>
                     <option value="loss">Закрылась по Стоп-Лоссу</option>
@@ -182,7 +180,7 @@ export const Diary: FC = () => {
                     <input 
                         type="text"
                         name="emotions"
-                        value={addDeal.emotions}
+                        value={newDeal.emotions}
                         onChange={handleChange}
                         placeholder="Эмоции"
                         required
