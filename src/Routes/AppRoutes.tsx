@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import { HomeContentPage } from "../Components/HomeContentPage";
 import { ROUTES } from "../utils/routes";
 import { Diary } from "../Pages/Diary";
+import { DealHistoryPage } from "../Pages/DealHistoryPage";
 
 const layoutStyle = {
   overflow: 'hidden',
@@ -22,7 +23,8 @@ export const AppRoutes:FC = () => {
             <div className="content">
                 <Routes>
                     <Route index element={<HomeContentPage />} />
-                    <Route path={ROUTES.DIARY} element={<Diary />} />  
+                    <Route path={ROUTES.DIARY} element={<Diary />} />
+                    <Route path={ROUTES.HISTORY} element={<DealHistoryPage />} />
                 </Routes>
             </div>
         </Layout>
